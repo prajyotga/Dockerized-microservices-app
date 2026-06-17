@@ -28,9 +28,10 @@ const addCart = async (req, res) => {
         ],
       });
     } else {
-      const existingItem = cart.items.findOne((item) => {
-        item.menuItem.toString() === menuItemId;
-      });
+     const existingItem = cart.items.find(
+  (item) =>
+    item.menuItem.toString() === menuItemId
+);
 
       if (existingItem) {
         existingItem.quantity += 1;

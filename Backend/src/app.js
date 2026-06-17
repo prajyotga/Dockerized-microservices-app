@@ -7,6 +7,7 @@ const userRoutes=require("./routes/userRoutes");
 const restaurantRoutes=require("./routes/restaurantRoutes");
 const menuRoutes=require("./routes/menuRoutes");
 const cartRoutes=require("./routes/cartRoutes");
+const orderRoutes=require("./routes/orderRoutes");
 
 
 
@@ -19,6 +20,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/restaurants",restaurantRoutes);
 app.use("/api/menu",menuRoutes);
 app.use("/api/cart",cartRoutes);
+app.use("/api/orders",orderRoutes);
 
 
 module.exports=app;
