@@ -2,6 +2,7 @@ const Order = require("../models/Order");
 const Cart = require("../models/Cart");
 const Menu = require("../models/Menu");
 
+// --------create an order for this logged in user
 const createOrder = async (req, res) => {
   try {
     const cart = await Cart.findOne({
@@ -49,4 +50,67 @@ const createOrder = async (req, res) => {
   }
 };
 
-module.exports=createOrder;
+//Get all the orders of the looged in user
+
+const getAllOrder = async (req, res) => {
+  try {
+    const orders = await Order.findOne({
+      userId: req.user.id,
+    }).populate("items.menuItem")
+    .sort({ createdAt: -1 });
+
+    if (!orders || orders.length == 0) {
+      res.status(400).json({
+        success: false,
+        message: "No orders placed yet",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "All orders are listed",
+      orders,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+
+const getOrderById=async(req,res)=>{
+
+try{
+  const order= await Order.findById(
+    req.params.id,
+  ).populate("items.menuItem");
+
+  if(!order){
+    res.status(401).json({
+      succes:false,
+      message:"Order Not found"
+    })
+  }
+
+  res.status(200).json({
+   succes:true,
+      message:"Order  found",
+      order
+  })
+
+}
+catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+}
+
+module.exports = {createOrder,getAllOrder,getOrderById};
