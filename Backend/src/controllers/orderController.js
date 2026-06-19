@@ -113,4 +113,30 @@ catch (error) {
   }
 }
 
-module.exports = {createOrder,getAllOrder,getOrderById};
+const updateOrderStatus=async (req,res)=>{
+  try{
+const {status}=req.body;
+
+ const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+
+res.status(200).json({
+  success:true,
+  message:"order status updated succesfully",
+  order,
+})
+
+  }  catch (error) {
+   
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+}
+module.exports = {createOrder,getAllOrder,getOrderById,updateOrderStatus};
