@@ -26,6 +26,20 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    paymentStatus: {
+      type: String,
+      enum: ["Pending", "Preparing", "Out For Delivery", "Delivered"],
+      default: "Pending",
+    },
+    paymentId: {
+      type: String,
+      default: "",
+    },
+
+    razorpayOrderId: {
+      type: String,
+      default: "",
+    },
     status: {
       type: String,
       enum: ["Pending", "Preparing", "Out For Delivery", "Delivered"],
@@ -36,6 +50,5 @@ const orderSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
-
 
 module.exports = mongoose.model("Order", orderSchema);
