@@ -54,7 +54,7 @@ const createOrder = async (req, res) => {
 
 const getAllOrder = async (req, res) => {
   try {
-    const orders = await Order.findOne({
+    const orders = await Order.find({
       userId: req.user.id,
     }).populate("items.menuItem")
     .sort({ createdAt: -1 });
