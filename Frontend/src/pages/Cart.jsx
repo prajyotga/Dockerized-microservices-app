@@ -14,7 +14,7 @@ const [loading,setLoading]=useState(true);
   try{
       const {data}= await API.get("/cart");
 
-      console.log("hi this is cart");
+      
     console.log(data);
     setCart(data.cart);
   }catch(error){

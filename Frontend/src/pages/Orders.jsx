@@ -20,6 +20,40 @@ const Orders = () => {
     }
   };
 
+  const createPayment=async (orderId)=>{
+   try{
+
+    const {data}=await API.post("/payment/create",{orderId});
+    console.log(data);
+
+
+     const options ={
+    key:import.meta.env.VITE_RAZORPAY_KEY_ID,
+    amount:data.razorPayOrder.amount,
+    currency:data.razorPayOrder.currency,
+    description:"Food Order Payment",
+    name:"Food Delivery",
+    order_id:data.razorPayOrder.id,
+     handler: async function (response) {
+        console.log(response);
+
+        // We will verify the payment here
+      },
+
+  }
+
+
+  const razorpay = new window.Razorpay(options);
+
+razorpay.open(); 
+
+   }catch (error) {
+    console.log(error);
+  }
+  }
+
+ 
+
   useEffect(() => {
     fetchOrder();
   }, []);
@@ -84,7 +118,7 @@ const Orders = () => {
           ))}
 
           {order.paymentStatus === "Pending" && (
-            <button>
+            <button  onClick={()=>{createPayment(order._id)}}>
               Pay Now
             </button>
           )}
