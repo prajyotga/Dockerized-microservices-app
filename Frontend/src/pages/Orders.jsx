@@ -35,10 +35,25 @@ const Orders = () => {
     name:"Food Delivery",
     order_id:data.razorPayOrder.id,
      handler: async function (response) {
-        console.log(response);
+  try {
+    console.log(response);
 
-        // We will verify the payment here
-      },
+    const { data } = await API.post("/payment/verify", {
+      razorpay_order_id: response.razorpay_order_id,
+      razorpay_payment_id: response.razorpay_payment_id,
+      razorpay_signature: response.razorpay_signature,
+    });
+
+    console.log(data);
+
+    alert("Payment Successful");
+
+    fetchOrder(); // Refresh orders to show updated status
+  } catch (error) {
+    console.log(error);
+    alert("Payment Verification Failed");
+  }
+},
 
   }
 
