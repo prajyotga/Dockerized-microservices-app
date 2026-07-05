@@ -1,129 +1,161 @@
-import React, {  useState } from 'react'
-import { useEffect } from 'react'
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../services/api";
-import { useNavigate } from 'react-router-dom';
+import CartCard from "../components/CartCard";
+import "../styles/Cart.css";
+import { toast } from "react-toastify";
 
 const Cart = () => {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
-const [cart,setCart]=useState(null);
-const [loading,setLoading]=useState(true);
+  const [cart, setCart] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const fetchCart=async ()=>{
+  const fetchCart = async () => {
+    try {
+      const { data } = await API.get("/cart");
 
-  try{
-      const {data}= await API.get("/cart");
-
-      
-    console.log(data);
-    setCart(data.cart);
-  }catch(error){
-     console.log(error);
-      alert("Failed to fetch cart items");
-  }finally {
-      setLoading(false);
-    }
-
-
-  };
-
-  const removeItem=async (menuItemId)=>{
-
-    try{
-
-      await API.delete(`/cart/${menuItemId}`) ;
-
-      alert("item removed");
-      fetchCart();
-
-    }catch (error) {
-      console.log(error);
-    }
-  }
-
-
-  const placeOrder=async ()=>{
-    try{
-
-      const {data}=await API.post("/orders");
       console.log(data);
 
-alert("order palced succesfully");
-
-navigate("/orders");
-
-    }catch(error){
-     console.log(error);
-      alert("Failed to place order");
-  }finally {
+      setCart(data.cart);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to fetch cart items");
+    } finally {
       setLoading(false);
     }
-    
-  }
+  };
 
-   useEffect(()=>{
+  const removeItem = async (menuItemId) => {
+    try {
+      await API.delete(`/cart/${menuItemId}`);
+
+      toast.error("Item removed");
+
+      fetchCart();
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to remove item");
+    }
+  };
+
+  const increaseQuantity = async (menuItemId) => {
+  try {
+    await API.patch(`/cart/increase/${menuItemId}`);
+
     fetchCart();
-  },[]);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-   if (loading) {
+const decreaseQuantity = async (menuItemId) => {
+  try {
+    await API.patch(`/cart/decrease/${menuItemId}`);
+
+    fetchCart();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+  const placeOrder = async () => {
+    try {
+      const { data } = await API.post("/orders");
+
+      console.log(data);
+
+      toast.success("Order placed successfully");
+
+      navigate("/orders");
+    } catch (error) {
+      console.log(error);
+      total.error("Failed to place order");
+    }
+  };
+
+  useEffect(() => {
+    fetchCart();
+  }, []);
+
+  if (loading) {
     return <h2>Loading...</h2>;
   }
-
 
   if (!cart || cart.items.length === 0) {
     return <h2>Your Cart is Empty</h2>;
   }
 
-  const total=cart.items.reduce((sum,item)=>{
-    return sum+item.menuItem.price*item.quantity;
-  },0)
-
- 
+  const total = cart.items.reduce((sum, item) => {
+    return sum + item.menuItem.price * item.quantity;
+  }, 0);
 
 
+    return (
+  <div className="cart-page">
 
+    <div className="cart-left">
 
+      <h1 className="cart-title">🛒 My Cart</h1>
 
-  return (
-     <div>
-      <h1>My Cart</h1>
+      <div className="cart-container">
+        {cart.items.map((item) => (
+          <CartCard
+            key={item._id}
+            item={item}
+            removeItem={removeItem}
+            increaseQuantity={increaseQuantity}
+  decreaseQuantity={decreaseQuantity}
+          />
+        ))}
+      </div>
 
-      {cart.items.map((item) => (
-        <div
-          key={item.menuItem._id}
-          style={{
-            border: "1px solid black",
-            margin: "10px",
-            padding: "10px",
-          }}
-        >
-          <h2>{item.menuItem.name}</h2>
+    </div>
 
-          <p>{item.menuItem.description}</p>
+    <div className="cart-summary">
 
-          <p>₹ {item.menuItem.price}</p>
-
-          <p>Quantity : {item.quantity}</p>
-
-          <button
-            onClick={() =>
-              removeItem(item.menuItem._id)
-            }
-          >
-            Remove
-          </button>
-        </div>
-      ))}
+      <h2>Order Summary</h2>
 
       <hr />
 
-      <h2>Total : ₹ {total}</h2>
+      <div className="summary-row">
+        <span>Items</span>
 
-      <button onClick={placeOrder}>
+        <span>{cart.items.length}</span>
+      </div>
+
+      <div className="summary-row">
+        <span>Total</span>
+
+        <span>₹ {total}</span>
+      </div>
+
+      <div className="summary-row">
+        <span>Delivery Fee</span>
+
+        <span>₹ 40</span>
+      </div>
+
+      <hr />
+
+      <div className="summary-row total">
+        <span>Grand Total</span>
+
+        <span>₹ {total + 40}</span>
+      </div>
+
+      <button
+        className="order-btn"
+        onClick={placeOrder}
+      >
         Place Order
       </button>
-    </div>
-  )
-}
 
-export default Cart
+    </div>
+
+  </div>
+);
+ 
+};
+
+export default Cart;

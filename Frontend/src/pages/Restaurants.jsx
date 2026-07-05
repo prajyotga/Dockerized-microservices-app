@@ -1,93 +1,53 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import RestaurantCard from "../components/RestaurantCard";
+import "../styles/Restaurants.css";
 import API from "../services/api";
+import { toast } from "react-toastify";
 
 const Restaurants = () => {
-    const navigate = useNavigate();
-  const [restaurants, setRestaurants] = useState([""]);
-  const [loading,setLoading]=useState(false);
+  const [restaurants, setRestaurants] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchRestaurants = async () => {
     try {
-      const { data } = await  API.get("/restaurants");
+      const { data } = await API.get("/restaurants");
       console.log(data);
 
       setRestaurants(data.restaurants);
     } catch (error) {
       console.log(error);
-      alert("Failed to fetch restaurants");
+      toast.error("Failed to fetch restaurants");
     } finally {
       setLoading(false);
     }
-
-
-   
-
-     if (loading) {
-    return <h2>Loading...</h2>;
-  }
   };
 
-   useEffect(()=>{
-        fetchRestaurants();
-    },[]);
+  useEffect(() => {
+    fetchRestaurants();
+  }, []);
+
+  if (loading) {
+    return <h2>Loading...</h2>;
+  }
+
   return (
-    <div>
-      <h1>Restaurants</h1>
+    <div className="restaurants-page">
+      <h1 className="restaurants-title">
+        Restaurants
+      </h1>
 
-      {restaurants.length===0?(<h3>No restaurants found</h3>):
-      ( restaurants.map((restaurant) => (
-              
-
-              <div
-            key={restaurant._id}
-            style={{
-              border: "1px solid black",
-              padding: "15px",
-              margin: "15px",
-              borderRadius: "10px",
-            }}
-          >
-            <h2>{restaurant.name}</h2>
-
-            <p>
-              <strong>Description:</strong>{" "}
-              {restaurant.description}
-            </p>
-
-            <p>
-              <strong>Address:</strong>{" "}
-              {restaurant.address}
-            </p>
-
-            <p>
-              <strong>Rating:</strong>{" "}
-              {restaurant.rating}
-            </p>
-
-            {restaurant.image && (
-              <img
-                src={restaurant.image}
-                alt={restaurant.name}
-                width="250"
-              />
-            )}
-
-            <br />
-            <br />
-
-            <button
-              onClick={() =>
-                navigate(
-                  `/menu/${restaurant._id}`
-                )
-              }
-            >
-              View Menu
-            </button>
-          </div>
-
-      )))}
+      {restaurants.length === 0 ? (
+        <h3>No Restaurants Found</h3>
+      ) : (
+        <div className="restaurants-container">
+          {restaurants.map((restaurant) => (
+            <RestaurantCard
+              key={restaurant._id}
+              restaurant={restaurant}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

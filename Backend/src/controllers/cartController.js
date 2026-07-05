@@ -103,4 +103,101 @@ const removeCart = async (req, res) => {
   }
 };
 
-module.exports = { removeCart, addCart, getCart };
+const increaseQuantity = async (req, res) => {
+  try {
+    const cart = await Cart.findOne({
+      userId: req.user.id,
+    });
+
+    if (!cart) {
+      return res.status(404).json({
+        success: false,
+        message: "Cart not found",
+      });
+    }
+
+    const item = cart.items.find(
+      (item) =>
+        item.menuItem.toString() === req.params.menuItemId
+    );
+
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        message: "Item not found in cart",
+      });
+    }
+
+    item.quantity += 1;
+
+    await cart.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Quantity Increased",
+      cart,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+
+const decreaseQuantity = async (req, res) => {
+  try {
+    const cart = await Cart.findOne({
+      userId: req.user.id,
+    });
+
+    if (!cart) {
+      return res.status(404).json({
+        success: false,
+        message: "Cart not found",
+      });
+    }
+
+    const item = cart.items.find(
+      (item) =>
+        item.menuItem.toString() === req.params.menuItemId
+    );
+
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        message: "Item not found in cart",
+      });
+    }
+
+    item.quantity -= 1;
+
+    if (item.quantity <= 0) {
+      cart.items = cart.items.filter(
+        (item) =>
+          item.menuItem.toString() !==
+          req.params.menuItemId
+      );
+    }
+
+    await cart.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Quantity Updated",
+      cart,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+module.exports = { removeCart, addCart, getCart ,decreaseQuantity,increaseQuantity };

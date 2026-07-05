@@ -1,0 +1,16 @@
+.orders-page{
+    padding:40px;
+    background:#f8f9fa;
+    min-height:100vh;
+}
+
+.orders-title{
+    text-align:center;
+    color:#ff6b35;
+    margin-bottom:35px;
+}
+
+.orders-container{
+    max-width:900px;
+    margin:auto;
+}

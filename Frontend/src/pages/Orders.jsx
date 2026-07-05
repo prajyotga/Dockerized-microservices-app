@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
+import OrderCard from "../components/OrderCard";
+import "../styles/Orders.css";
+import { toast } from "react-toastify";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -14,60 +17,71 @@ const Orders = () => {
       setOrders(data.orders);
     } catch (err) {
       console.log(err);
-      alert("Failed to get orders data");
+      toast.error("Failed to get orders data");
     } finally {
       setLoading(false);
     }
   };
 
-  const createPayment=async (orderId)=>{
-   try{
+  const createPayment = async (orderId) => {
+    try {
+      const { data } = await API.post("/payment/create", {
+        orderId,
+      });
 
-    const {data}=await API.post("/payment/create",{orderId});
-    console.log(data);
+      console.log(data);
 
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
 
-     const options ={
-    key:import.meta.env.VITE_RAZORPAY_KEY_ID,
-    amount:data.razorPayOrder.amount,
-    currency:data.razorPayOrder.currency,
-    description:"Food Order Payment",
-    name:"Food Delivery",
-    order_id:data.razorPayOrder.id,
-     handler: async function (response) {
-  try {
-    console.log(response);
+        amount: data.razorPayOrder.amount,
 
-    const { data } = await API.post("/payment/verify", {
-      razorpay_order_id: response.razorpay_order_id,
-      razorpay_payment_id: response.razorpay_payment_id,
-      razorpay_signature: response.razorpay_signature,
-    });
+        currency: data.razorPayOrder.currency,
 
-    console.log(data);
+        description: "Food Order Payment",
 
-    alert("Payment Successful");
+        name: "Food Delivery",
 
-    fetchOrder(); // Refresh orders to show updated status
-  } catch (error) {
-    console.log(error);
-    alert("Payment Verification Failed");
-  }
-},
+        order_id: data.razorPayOrder.id,
 
-  }
+        handler: async function (response) {
+          try {
+            console.log(response);
 
+            const { data } = await API.post(
+              "/payment/verify",
+              {
+                razorpay_order_id:
+                  response.razorpay_order_id,
 
-  const razorpay = new window.Razorpay(options);
+                razorpay_payment_id:
+                  response.razorpay_payment_id,
 
-razorpay.open(); 
+                razorpay_signature:
+                  response.razorpay_signature,
+              }
+            );
 
-   }catch (error) {
-    console.log(error);
-  }
-  }
+            console.log(data);
 
- 
+            toast.success("Payment Successful");
+
+            fetchOrder();
+          } catch (error) {
+            console.log(error);
+
+            toast.error("Payment Verification Failed");
+          }
+        },
+      };
+
+      const razorpay = new window.Razorpay(options);
+
+      razorpay.open();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     fetchOrder();
@@ -82,63 +96,24 @@ razorpay.open();
   }
 
   return (
-    <div>
-      <h1>My Orders</h1>
+    <div className="orders-page">
 
-      {orders.map((order) => (
-        <div
-          key={order._id}
-          style={{
-            border: "1px solid black",
-            margin: "15px",
-            padding: "15px",
-            borderRadius: "10px",
-          }}
-        >
-          <h2>Order ID: {order._id}</h2>
+      <h1 className="orders-title">
+        My Orders
+      </h1>
 
-          <p>
-            <strong>Status:</strong> {order.status}
-          </p>
+      <div className="orders-container">
 
-          <p>
-            <strong>Payment Status:</strong> {order.paymentStatus}
-          </p>
+        {orders.map((order) => (
+          <OrderCard
+            key={order._id}
+            order={order}
+            createPayment={createPayment}
+          />
+        ))}
 
-          <p>
-            <strong>Total Amount:</strong> ₹{order.totalAmount}
-          </p>
+      </div>
 
-          <hr />
-
-          <h3>Items</h3>
-
-          {order.items.map((item) => (
-            <div
-              key={item._id}
-              style={{
-                marginBottom: "10px",
-                padding: "10px",
-                border: "1px solid gray",
-              }}
-            >
-              <h4>{item.menuItem.name}</h4>
-
-              <p>{item.menuItem.description}</p>
-
-              <p>Price: ₹{item.menuItem.price}</p>
-
-              <p>Quantity: {item.quantity}</p>
-            </div>
-          ))}
-
-          {order.paymentStatus === "Pending" && (
-            <button  onClick={()=>{createPayment(order._id)}}>
-              Pay Now
-            </button>
-          )}
-        </div>
-      ))}
     </div>
   );
 };

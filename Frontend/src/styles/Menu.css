@@ -1,0 +1,19 @@
+.menu-page {
+  padding: 30px;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.menu-title {
+  text-align: center;
+  color: #ff6b35;
+  margin-bottom: 35px;
+  font-size: 40px;
+}
+
+.menu-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}

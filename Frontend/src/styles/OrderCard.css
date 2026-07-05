@@ -1,0 +1,63 @@
+.order-card{
+    background:white;
+    border-radius:15px;
+    padding:25px;
+    margin-bottom:25px;
+    box-shadow:0 5px 15px rgba(0,0,0,.12);
+}
+
+.order-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.status{
+    color:white;
+    background:#ff9800;
+    padding:8px 15px;
+    border-radius:20px;
+}
+
+.order-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:18px 0;
+}
+
+.item-right{
+    text-align:right;
+}
+
+.order-footer{
+    display:flex;
+    justify-content:space-between;
+    margin-top:20px;
+}
+
+.pending{
+    color:#dc3545;
+    font-weight:bold;
+}
+
+.paid{
+    color:#28a745;
+    font-weight:bold;
+}
+
+.pay-btn{
+    width:100%;
+    margin-top:20px;
+    padding:14px;
+    background:#ff6b35;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.pay-btn:hover{
+    background:#e85d04;
+}

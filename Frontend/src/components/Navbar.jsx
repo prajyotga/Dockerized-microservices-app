@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaHamburger, FaShoppingCart, FaClipboardList, FaSignOutAlt, FaHome } from "react-icons/fa";
-import "./Navbar.css";
+import "../styles/Navbar.css";
 
 const Navbar = () => {
   const navigate = useNavigate();

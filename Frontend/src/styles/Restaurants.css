@@ -1,0 +1,27 @@
+.restaurants-page {
+  padding: 30px;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.restaurants-title {
+  text-align: center;
+  color: #ff6b35;
+  margin-bottom: 35px;
+  font-size: 40px;
+}
+
+.restaurants-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.restaurant-card {
+  transition: all 0.3s ease;
+}
+
+.restaurant-card:hover {
+  transform: translateY(-8px);
+}
