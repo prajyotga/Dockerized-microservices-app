@@ -1,0 +1,143 @@
+.hero{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:80px 8%;
+
+    min-height:85vh;
+
+    background:linear-gradient(135deg,#fff8f3,#ffffff);
+}
+
+.hero-left{
+    flex:1;
+}
+
+.hero-tag{
+
+    display:inline-block;
+
+    background:#ffe8dc;
+
+    color:#ff6b35;
+
+    padding:8px 18px;
+
+    border-radius:25px;
+
+    font-weight:600;
+
+    margin-bottom:25px;
+}
+
+.hero-left h1{
+
+    font-size:64px;
+
+    line-height:1.15;
+
+    color:#222;
+
+    font-weight:800;
+}
+
+.hero-left h1 span{
+
+    color:#ff6b35;
+}
+
+.hero-left p{
+
+    margin:25px 0;
+
+    color:#666;
+
+    font-size:20px;
+
+    max-width:550px;
+
+    line-height:1.8;
+}
+
+.search-box{
+
+    width:450px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    background:white;
+
+    padding:15px 20px;
+
+    border-radius:15px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+    margin-bottom:30px;
+}
+
+.search-box input{
+
+    flex:1;
+
+    border:none;
+
+    outline:none;
+
+    font-size:17px;
+}
+
+.hero-left button{
+
+    background:#ff6b35;
+
+    color:white;
+
+    border:none;
+
+    padding:16px 32px;
+
+    border-radius:12px;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.hero-left button:hover{
+
+    background:#e85d04;
+
+    transform:translateY(-3px);
+}
+
+.hero-right{
+
+    flex:1;
+
+    display:flex;
+
+    justify-content:center;
+}
+
+.hero-right img{
+
+    width:380px;
+
+    height:380px;
+
+    object-fit:cover;
+
+    border-radius:50%;
+
+    box-shadow:0 30px 60px rgba(0,0,0,.18);
+}

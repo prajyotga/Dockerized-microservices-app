@@ -2,15 +2,13 @@
 
     display:flex;
 
-    align-items:center;
-
     gap:20px;
 
     background:white;
 
     border-radius:15px;
 
-    padding:18px;
+    padding:20px;
 
     box-shadow:0 5px 15px rgba(0,0,0,.12);
 
@@ -28,64 +26,49 @@
 
     height:120px;
 
-    object-fit:cover;
-
     border-radius:12px;
+
+    object-fit:cover;
 }
 
-.cart-content{
+.cart-details{
 
     flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
 }
 
-.cart-content h2{
-
-    margin-bottom:10px;
-}
-
-.cart-content p{
-
-    color:#666;
-}
-
-.cart-info{
+.cart-top{
 
     display:flex;
 
     justify-content:space-between;
 
-    margin-top:18px;
-
-    font-weight:bold;
+    align-items:center;
 }
 
 .price{
 
+    font-size:22px;
+
     color:#ff6b35;
 
-    font-size:20px;
+    font-weight:bold;
 }
 
-.remove-btn{
+.cart-bottom{
 
-    background:#dc3545;
+    display:flex;
 
-    color:white;
+    justify-content:space-between;
 
-    border:none;
+    align-items:center;
 
-    padding:12px 20px;
-
-    border-radius:8px;
-
-    cursor:pointer;
-
-    transition:.3s;
-}
-
-.remove-btn:hover{
-
-    background:#b02a37;
+    margin-top:20px;
 }
 
 .quantity-box{
@@ -94,33 +77,26 @@
 
     align-items:center;
 
-    gap:12px;
+    gap:10px;
 }
 
 .quantity-box button{
 
-    width:35px;
+    width:38px;
 
-    height:35px;
+    height:38px;
 
     border:none;
+
+    border-radius:8px;
 
     background:#ff6b35;
 
     color:white;
 
-    border-radius:8px;
-
-    font-size:20px;
+    font-size:22px;
 
     cursor:pointer;
-
-    transition:.3s;
-}
-
-.quantity-box button:hover{
-
-    background:#e85d04;
 }
 
 .quantity-box span{
@@ -129,7 +105,33 @@
 
     font-weight:bold;
 
-    min-width:20px;
+    width:25px;
 
     text-align:center;
+}
+
+.remove-btn{
+
+    border:none;
+
+    background:#dc3545;
+
+    color:white;
+
+    padding:10px 18px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    display:flex;
+
+    gap:8px;
+
+    align-items:center;
+}
+
+.remove-btn:hover{
+
+    background:#b02a37;
 }
