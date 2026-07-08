@@ -17,3 +17,49 @@
   justify-content: center;
   gap: 30px;
 }
+
+.menu-controls{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:20px;
+
+    margin-bottom:40px;
+}
+
+.category-buttons{
+
+    display:flex;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+    justify-content:center;
+}
+
+.category-buttons button{
+
+    padding:10px 20px;
+
+    border:none;
+
+    background:#eee;
+
+    border-radius:25px;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.category-buttons button.active{
+
+    background:#ff6b35;
+
+    color:white;
+}
