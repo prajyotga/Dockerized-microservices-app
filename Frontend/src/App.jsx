@@ -22,8 +22,7 @@ function AppContent() {
 
   // Hide navbar on Login and Register pages
   const hideNavbar =
-    location.pathname === "/login" ||
-    location.pathname === "/register";
+    location.pathname === "/login" || location.pathname === "/register";
 
   return (
     <>
@@ -37,24 +36,10 @@ function AppContent() {
 
         <Route path="/register" element={<Register />} />
 
-        {/* Protected Routes */}
-        <Route
-          path="/restaurants"
-          element={
-            <ProtectedRoute>
-              <Restaurants />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/restaurants" element={<Restaurants />} />
+        <Route path="/menu/:restaurantId" element={<Menu />} />
 
-        <Route
-          path="/menu/:restaurantId"
-          element={
-            <ProtectedRoute>
-              <Menu />
-            </ProtectedRoute>
-          }
-        />
+        {/* Protected Routes */}
 
         <Route
           path="/cart"

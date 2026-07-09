@@ -1,13 +1,13 @@
-const mongoose=require("mongoose");
+const mongoose = require("mongoose");
 
-const menuSchema =mongoose.Schema({
-
-   restaurant_id:{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"Restaurant",
-    require:true,
-   },
-   name: {
+const menuSchema = mongoose.Schema(
+  {
+    restaurant_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Restaurant",
+      required: true,
+    },
+    name: {
       type: String,
       required: true,
     },
@@ -31,9 +31,18 @@ const menuSchema =mongoose.Schema({
       type: String,
       default: "",
     },
+    isVeg: {
+      type: Boolean,
+      default: true,
+    },
+    isAvailable: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,
-})
+  },
+);
 
-module.exports=mongoose.model("Menu",menuSchema);
+module.exports = mongoose.model("Menu", menuSchema);

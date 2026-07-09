@@ -2,79 +2,71 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import API from "../services/api";
 import { toast } from "react-toastify";
+import "../styles/Login.css";
 
 const Login = () => {
-    const navigate=useNavigate();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  const handleSubmit=async (e)=>{
-e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-try{
+    try {
+      const { data } = await API.post("/auth/login", formData);
+      console.log(data);
 
-   
+      localStorage.setItem("token", data.token);
 
-    const {data}= await API.post(
-      "/auth/login", formData,
-    )
-    console.log(data);
-
-    localStorage.setItem("token",data.token);
-
-    toast.success("Login successfull");
-    navigate("/restaurants");
-
-
-}catch (error) {
+      toast.success("Login successfull");
+      navigate("/restaurants");
+    } catch (error) {
       console.log(error);
- 
+
       toast.error("Login Failed");
     }
-  }
+  };
 
-
-  const handleChange=(e)=>{
-
+  const handleChange = (e) => {
     setFormData({
-       ...formData,
-        [e.target.name]:e.target.value
-    })
-  }
-  
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Enter Email"
-          onChange={handleChange}
-          value={formData.email}
-        />
+    <div className="auth-container">
+      <div className="auth-card">
+        <h1>Welcome Back</h1>
 
-        <br />
-        <br />
-        <input
-          type="password"
-          name="password"
-          placeholder="Enter Password"
-          onChange={handleChange}
-          value={formData.password}
-        />
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter Email"
+            value={formData.email}
+            onChange={handleChange}
+          />
 
-        <br /><br />
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter Password"
+            value={formData.password}
+            onChange={handleChange}
+          />
 
-        <button type="submit">Login</button>
+          <button className="auth-btn" type="submit">
+            Login
+          </button>
 
-        <br /><br />
-        <Link to="/register">
-        Register Here
-      </Link>
-      </form>
+          <div className="auth-link">
+            Don't have an account? <Link to="/register">Register</Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

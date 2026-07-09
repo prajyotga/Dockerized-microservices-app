@@ -22,6 +22,16 @@ const Menu = () => {
   ];
 
   const addToCart = async (menuItemId) => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      toast.info("Please login to add items to cart");
+      navigate("/login", {
+        state: { from: `/menu/${restaurantId}`, pendingItem: menuItemId },
+      });
+      return;
+    }
+
     try {
       console.log("Sending:", menuItemId);
 

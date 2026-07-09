@@ -2,6 +2,8 @@ const Menu = require("../models/Menu");
 const Cart = require("../models/Cart");
 
 const addCart = async (req, res) => {
+
+
   try {
     const { menuItemId } = req.body;
 
@@ -28,10 +30,9 @@ const addCart = async (req, res) => {
         ],
       });
     } else {
-     const existingItem = cart.items.find(
-  (item) =>
-    item.menuItem.toString() === menuItemId
-);
+      const existingItem = cart.items.find(
+        (item) => item.menuItem.toString() === menuItemId,
+      );
 
       if (existingItem) {
         existingItem.quantity += 1;
@@ -62,11 +63,9 @@ const addCart = async (req, res) => {
 
 const getCart = async (req, res) => {
   try {
-    const cart = await Cart
-      .findOne({
-        userId: req.user.id,
-      })
-      .populate("items.menuItem");
+    const cart = await Cart.findOne({
+      userId: req.user.id,
+    }).populate("items.menuItem");
 
     res.status(200).json({
       success: true,
@@ -117,8 +116,7 @@ const increaseQuantity = async (req, res) => {
     }
 
     const item = cart.items.find(
-      (item) =>
-        item.menuItem.toString() === req.params.menuItemId
+      (item) => item.menuItem.toString() === req.params.menuItemId,
     );
 
     if (!item) {
@@ -147,7 +145,6 @@ const increaseQuantity = async (req, res) => {
   }
 };
 
-
 const decreaseQuantity = async (req, res) => {
   try {
     const cart = await Cart.findOne({
@@ -162,8 +159,7 @@ const decreaseQuantity = async (req, res) => {
     }
 
     const item = cart.items.find(
-      (item) =>
-        item.menuItem.toString() === req.params.menuItemId
+      (item) => item.menuItem.toString() === req.params.menuItemId,
     );
 
     if (!item) {
@@ -177,9 +173,7 @@ const decreaseQuantity = async (req, res) => {
 
     if (item.quantity <= 0) {
       cart.items = cart.items.filter(
-        (item) =>
-          item.menuItem.toString() !==
-          req.params.menuItemId
+        (item) => item.menuItem.toString() !== req.params.menuItemId,
       );
     }
 
@@ -200,4 +194,10 @@ const decreaseQuantity = async (req, res) => {
   }
 };
 
-module.exports = { removeCart, addCart, getCart ,decreaseQuantity,increaseQuantity };
+module.exports = {
+  removeCart,
+  addCart,
+  getCart,
+  decreaseQuantity,
+  increaseQuantity,
+};
