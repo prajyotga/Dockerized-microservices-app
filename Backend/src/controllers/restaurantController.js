@@ -1,72 +1,71 @@
-const Restaurant = require("../models/Restaurant");
+const restaurantService = require("../services/restaurantService");
 
 const createRestaurant = async (req, res) => {
   try {
     const { name, description, address, image } = req.body;
 
-    const restaurant = await  Restaurant.create({
-      name,
-      description,
-      address,
-      image,
-      owner: req.user.id,
-    });
+    const restaurant =
+      await restaurantService.createRestaurant(
+        name,
+        description,
+        address,
+        image,
+        req.user.id
+      );
 
     res.status(201).json({
       success: true,
-      message: "Restaurant created succesfully",
+      message: "Restaurant created successfully",
+      restaurant,
     });
-  } catch (err){
-    console.log(err);
+  } catch (error) {
+    console.log(error);
 
     res.status(500).json({
       success: false,
-      message: "Internal Server Error",
+      message: error.message,
     });
   }
 };
 
 const getRestaurants = async (req, res) => {
   try {
-    const restaurants = await Restaurant.find({});
+    const restaurants =
+      await restaurantService.getRestaurants();
 
     res.status(200).json({
       success: true,
       restaurants,
     });
-  } catch (error){
+  } catch (error) {
     console.log(error);
 
     res.status(500).json({
       success: false,
-      message: "Internal Server Error",
+      message: error.message,
     });
   }
 };
 
 const getRestaurantById = async (req, res) => {
   try {
-    const restaurant = await Restaurant.findById(req.params.id);
-
-    if (!restaurant) {
-      res.status(400).json({
-        success: false,
-        message: "restaurant of this id doesnt exists",
-      });
-    }
+    const restaurant =
+      await restaurantService.getRestaurantById(
+        req.params.id
+      );
 
     res.status(200).json({
       success: true,
       restaurant,
     });
-  } catch(error) {
+  } catch (error) {
     console.log(error);
 
-    res.status(500).json({
+    res.status(404).json({
       success: false,
-      message: "Internal Server Error",
+      message: error.message,
     });
   }
 };
 
-module.exports = { createRestaurant, getRestaurants, getRestaurantById };
+module.exports={getRestaurantById,getRestaurants,createRestaurant}
