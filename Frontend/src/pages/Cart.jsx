@@ -63,7 +63,7 @@ const decreaseQuantity = async (menuItemId) => {
     try {
       const { data } = await API.post("/orders");
 
-      console.log(data);
+      console.log(data.orders);
 
       toast.success("Order placed successfully");
 

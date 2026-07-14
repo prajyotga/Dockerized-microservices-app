@@ -1,11 +1,10 @@
-const Order = require("../models/Order");
-const Cart = require("../models/Cart");
+const orderRepository = require("../repositories/orderRepository");
 
 // Create Order
 const createOrder = async (userId) => {
-  const cart = await Cart.findOne({
-    userId,
-  }).populate("items.menuItem");
+  const cart = await orderRepository.findCartByUserId(
+    userId
+  );
 
   if (!cart || cart.items.length === 0) {
     throw new Error("Cart is empty");
@@ -17,7 +16,7 @@ const createOrder = async (userId) => {
     totalAmount += item.menuItem.price * item.quantity;
   });
 
-  const order = await Order.create({
+  const order = await orderRepository.createOrder({
     userId,
     items: cart.items.map((item) => ({
       menuItem: item.menuItem._id,
@@ -28,18 +27,15 @@ const createOrder = async (userId) => {
 
   cart.items = [];
 
-  await cart.save();
+  await orderRepository.saveCart(cart);
 
   return order;
 };
 
 // Get All Orders
 const getAllOrder = async (userId) => {
-  const orders = await Order.find({
-    userId,
-  })
-    .populate("items.menuItem")
-    .sort({ createdAt: -1 });
+  const orders =
+    await orderRepository.getOrdersByUserId(userId);
 
   if (!orders || orders.length === 0) {
     throw new Error("No orders placed yet");
@@ -50,27 +46,29 @@ const getAllOrder = async (userId) => {
 
 // Get Order By Id
 const getOrderById = async (orderId) => {
-  const order = await Order.findById(orderId).populate(
-    "items.menuItem"
-  );
+  const order =
+    await orderRepository.getOrderById(orderId);
 
   if (!order) {
-    throw new Error("Order Not Found");
+    throw new Error("Order not found");
   }
 
   return order;
 };
 
-// Update Order Status
-const updateOrderStatus = async (orderId, status) => {
-  const order = await Order.findByIdAndUpdate(
-    orderId,
-    { status },
-    { new: true }
-  );
+// Update Status
+const updateOrderStatus = async (
+  orderId,
+  status
+) => {
+  const order =
+    await orderRepository.updateOrderStatus(
+      orderId,
+      status
+    );
 
   if (!order) {
-    throw new Error("Order Not Found");
+    throw new Error("Order not found");
   }
 
   return order;

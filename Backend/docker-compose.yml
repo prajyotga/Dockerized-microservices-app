@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  backend:
+    build: .
+
+    container_name: dockerized-microservices-backend
+
+    restart: unless-stopped
+
+    ports:
+      - "3000:3000"
+
+    env_file:
+      - .env
+
+    depends_on:
+      - mongodb
+
+    networks:
+      - food-network
+
+  mongodb:
+    image: mongo:8
+
+    container_name: mongodb
+
+    restart: unless-stopped
+
+    ports:
+      - "27017:27017"
+
+    environment:
+      MONGO_INITDB_DATABASE: fooddelivery
+
+    volumes:
+      - mongo-data:/data/db
+
+    networks:
+      - food-network
+
+volumes:
+  mongo-data:
+
+networks:
+  food-network:
