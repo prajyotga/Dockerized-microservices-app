@@ -1,17 +1,19 @@
 const restaurantService = require("../services/restaurantService");
 
+// Create Restaurant
 const createRestaurant = async (req, res) => {
   try {
     const { name, description, address, image } = req.body;
 
-    const restaurant =
-      await restaurantService.createRestaurant(
-        name,
-        description,
-        address,
-        image,
-        req.user.id
-      );
+    const userId = req.headers["x-user-id"];
+
+    const restaurant = await restaurantService.createRestaurant(
+      name,
+      description,
+      address,
+      image,
+      userId
+    );
 
     res.status(201).json({
       success: true,
@@ -28,10 +30,11 @@ const createRestaurant = async (req, res) => {
   }
 };
 
+// Get All Restaurants
 const getRestaurants = async (req, res) => {
   try {
-    const restaurants =
-      await restaurantService.getRestaurants();
+      console.log("GET RESTAURANTS CONTROLLER HIT");
+    const restaurants = await restaurantService.getRestaurants();
 
     res.status(200).json({
       success: true,
@@ -47,12 +50,12 @@ const getRestaurants = async (req, res) => {
   }
 };
 
+// Get Restaurant By Id
 const getRestaurantById = async (req, res) => {
   try {
-    const restaurant =
-      await restaurantService.getRestaurantById(
-        req.params.id
-      );
+    const restaurant = await restaurantService.getRestaurantById(
+      req.params.id
+    );
 
     res.status(200).json({
       success: true,
@@ -68,4 +71,8 @@ const getRestaurantById = async (req, res) => {
   }
 };
 
-module.exports={getRestaurantById,getRestaurants,createRestaurant}
+module.exports = {
+  createRestaurant,
+  getRestaurants,
+  getRestaurantById,
+};

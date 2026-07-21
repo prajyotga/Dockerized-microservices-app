@@ -1,4 +1,4 @@
-const Restaurant = require("../models/Restaurant");
+const restaurantRepository = require("../repositories/restaurantRepository");
 
 // Create Restaurant
 const createRestaurant = async (
@@ -8,27 +8,24 @@ const createRestaurant = async (
   image,
   owner
 ) => {
-  const restaurant = await Restaurant.create({
+  return await restaurantRepository.createRestaurant({
     name,
     description,
     address,
     image,
     owner,
   });
-
-  return restaurant;
 };
 
 // Get All Restaurants
 const getRestaurants = async () => {
-  const restaurants = await Restaurant.find({});
-
-  return restaurants;
+  return await restaurantRepository.getAllRestaurants();
 };
 
 // Get Restaurant By Id
 const getRestaurantById = async (restaurantId) => {
-  const restaurant = await Restaurant.findById(restaurantId);
+  const restaurant =
+    await restaurantRepository.getRestaurantById(restaurantId);
 
   if (!restaurant) {
     throw new Error("Restaurant not found");

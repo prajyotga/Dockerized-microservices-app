@@ -14,11 +14,12 @@ const Restaurants = () => {
 
   const fetchRestaurants = async () => {
     try {
-      const { data } = await API.get("/restaurants");
-      console.log(data);
+     const response = await API.get("/restaurants");
 
-      setRestaurants(data.restaurants);
-      setFilteredRestaurants(data.restaurants);
+
+
+setRestaurants(response.data.restaurants);
+setFilteredRestaurants(response.data.restaurants);
     } catch (error) {
       console.log(error);
       toast.error("Failed to fetch restaurants");

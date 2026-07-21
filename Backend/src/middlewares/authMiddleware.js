@@ -1,32 +1,20 @@
-const jwt = require("jsonwebtoken");
+const authMiddleware = (req, res, next) => {
+  const userId = req.headers["x-user-id"];
+  const userEmail = req.headers["x-user-email"];
 
-const verifyToken = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  if (!userId) {
     return res.status(401).json({
       success: false,
       message: "Unauthorized",
     });
   }
 
-  const token = authHeader.split(" ")[1];
+  req.user = {
+    id: userId,
+    email: userEmail,
+  };
 
-  try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET
-    );
-
-    req.user = decoded;
-
-    next();
-  } catch (error) {
-    return res.status(401).json({
-      success: false,
-      message: "Invalid Token",
-    });
-  }
+  next();
 };
 
-module.exports = verifyToken;
+module.exports = authMiddleware;

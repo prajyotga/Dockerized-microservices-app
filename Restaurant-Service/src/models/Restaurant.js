@@ -1,5 +1,5 @@
 const mongoose=require("mongoose");
-const User = require("./User");
+
 
 const restaurantSchema= new mongoose.Schema({
 
