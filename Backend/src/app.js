@@ -25,6 +25,10 @@ app.use(cookieParser());
 // app.use("/api/users", userRoutes);
 
 // app.use("/api/restaurants", restaurantRoutes); // Remove after testing Restaurant-Service
+app.use((req, res, next) => {
+  console.log("Backend received:", req.method, req.originalUrl);
+  next();
+});
 
 app.use("/api/menu", menuRoutes);
 app.use("/api/cart", cartRoutes);

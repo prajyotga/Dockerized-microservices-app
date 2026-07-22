@@ -33,7 +33,7 @@ const createRestaurant = async (req, res) => {
 // Get All Restaurants
 const getRestaurants = async (req, res) => {
   try {
-      console.log("GET RESTAURANTS CONTROLLER HIT");
+    
     const restaurants = await restaurantService.getRestaurants();
 
     res.status(200).json({

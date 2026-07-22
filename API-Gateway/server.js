@@ -50,9 +50,18 @@ app.use(
 // ==========================
 // Backend Service
 // ==========================
-
+// Public Menu APIs
 app.use(
-  "/api",
+  "/api/menu",
+  createProxyMiddleware({
+    target: `${process.env.BACKEND_SERVICE}/api/menu`,
+    changeOrigin: true,
+  })
+);
+
+// Protected Cart APIs
+app.use(
+  "/api/cart",
   authMiddleware,
   createProxyMiddleware({
     target: process.env.BACKEND_SERVICE,
@@ -60,14 +69,48 @@ app.use(
 
     on: {
       proxyReq: (proxyReq, req) => {
-        if (req.user) {
-          proxyReq.setHeader("x-user-id", req.user.id);
-          proxyReq.setHeader("x-user-email", req.user.email || "");
-        }
+        proxyReq.setHeader("x-user-id", req.user.id);
+        proxyReq.setHeader("x-user-email", req.user.email || "");
       },
     },
   })
 );
+
+// Protected Order APIs
+app.use(
+  "/api/orders",
+  authMiddleware,
+  createProxyMiddleware({
+    target: process.env.BACKEND_SERVICE,
+    changeOrigin: true,
+
+    on: {
+      proxyReq: (proxyReq, req) => {
+        proxyReq.setHeader("x-user-id", req.user.id);
+        proxyReq.setHeader("x-user-email", req.user.email || "");
+      },
+    },
+  })
+);
+
+// Protected Payment APIs
+app.use(
+  "/api/payment",
+  authMiddleware,
+  createProxyMiddleware({
+    target: process.env.BACKEND_SERVICE,
+    changeOrigin: true,
+
+    on: {
+      proxyReq: (proxyReq, req) => {
+        proxyReq.setHeader("x-user-id", req.user.id);
+        proxyReq.setHeader("x-user-email", req.user.email || "");
+      },
+    },
+  })
+);
+
+
 
 // ==========================
 // Health Check
