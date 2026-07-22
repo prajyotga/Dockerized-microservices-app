@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 // const authRoutes = require("./routes/authRoutes");   // Removed
 // const userRoutes = require("./routes/userRoutes");
 // const restaurantRoutes = require("./routes/restaurantRoutes"); // Remove after Restaurant-Service is working
-const menuRoutes = require("./routes/menuRoutes");
+// const menuRoutes = require("./routes/menuRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
@@ -25,12 +25,9 @@ app.use(cookieParser());
 // app.use("/api/users", userRoutes);
 
 // app.use("/api/restaurants", restaurantRoutes); // Remove after testing Restaurant-Service
-app.use((req, res, next) => {
-  console.log("Backend received:", req.method, req.originalUrl);
-  next();
-});
 
-app.use("/api/menu", menuRoutes);
+
+// app.use("/api/menu", menuRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payment", paymentRoutes);

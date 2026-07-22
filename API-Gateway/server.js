@@ -51,10 +51,19 @@ app.use(
 // Backend Service
 // ==========================
 // Public Menu APIs
+
+
+app.use((req, res, next) => {
+  console.log("Menu Service received:", req.method, req.originalUrl);
+  next();
+});
+
+
+
 app.use(
   "/api/menu",
   createProxyMiddleware({
-    target: `${process.env.BACKEND_SERVICE}/api/menu`,
+    target: `${process.env.MENU_SERVICE}/api/menu`,
     changeOrigin: true,
   })
 );
