@@ -12,17 +12,39 @@ const app = express();
 // ==========================
 
 app.use(cors());
-app.use(express.json());
+
 
 // ==========================
 // Auth Service (Public Routes)
 // ==========================
+
+
+
+
+app.use((req, res, next) => {
+  console.log("gatweway  :", req.method, req.originalUrl);
+  next();
+});
+
+
 
 app.use(
   "/api/auth",
   createProxyMiddleware({
     target: process.env.AUTH_SERVICE,
     changeOrigin: true,
+
+    onProxyReq: (proxyReq, req) => {
+      console.log("➡️ Proxying:", req.method, req.originalUrl);
+    },
+
+    onProxyRes: (proxyRes, req) => {
+      console.log("⬅️ Response:", proxyRes.statusCode);
+    },
+
+    onError: (err) => {
+      console.error("❌ Proxy Error:", err);
+    },
   })
 );
 
@@ -53,10 +75,6 @@ app.use(
 // Public Menu APIs
 
 
-app.use((req, res, next) => {
-  console.log("Menu Service received:", req.method, req.originalUrl);
-  next();
-});
 
 
 
@@ -73,7 +91,7 @@ app.use(
   "/api/cart",
   authMiddleware,
   createProxyMiddleware({
-    target: process.env.BACKEND_SERVICE,
+    target: `${process.env.CART_SERVICE}/api/cart`,
     changeOrigin: true,
 
     on: {
@@ -90,7 +108,7 @@ app.use(
   "/api/orders",
   authMiddleware,
   createProxyMiddleware({
-    target: process.env.BACKEND_SERVICE,
+    target: `${process.env.ORDER_SERVICE}/api/orders`,
     changeOrigin: true,
 
     on: {
@@ -135,6 +153,8 @@ app.get("/", (req, res) => {
 // ==========================
 // Start Server
 // ==========================
+
+app.use(express.json());
 
 const PORT = process.env.PORT || 4000;
 

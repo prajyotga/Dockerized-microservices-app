@@ -7,8 +7,8 @@ const cookieParser = require("cookie-parser");
 // const userRoutes = require("./routes/userRoutes");
 // const restaurantRoutes = require("./routes/restaurantRoutes"); // Remove after Restaurant-Service is working
 // const menuRoutes = require("./routes/menuRoutes");
-const cartRoutes = require("./routes/cartRoutes");
-const orderRoutes = require("./routes/orderRoutes");
+const cartRoutes = require("../../Cart-Service/src/routes/cartRoutes");
+// const orderRoutes = require("./routes/orderRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 
 app.use(
@@ -29,7 +29,7 @@ app.use(cookieParser());
 
 // app.use("/api/menu", menuRoutes);
 app.use("/api/cart", cartRoutes);
-app.use("/api/orders", orderRoutes);
+// app.use("/api/orders", orderRoutes);
 app.use("/api/payment", paymentRoutes);
 
 module.exports = app;

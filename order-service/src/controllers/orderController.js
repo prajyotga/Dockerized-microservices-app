@@ -3,9 +3,12 @@ const orderService = require("../services/orderService");
 // --------create an order for this logged in user
 
 
+
+
+
 const createOrder = async (req, res) => {
   try {
-    const order = await orderService.createOrder(req.user.id);
+    const order = await orderService.createOrder(req.headers["x-user-id"]);
 
     res.status(201).json({
       success: true,
@@ -26,7 +29,7 @@ const createOrder = async (req, res) => {
 
 const getAllOrder = async (req, res) => {
   try {
-    const orders = await orderService.getAllOrder(req.user.id);
+    const orders = await orderService.getAllOrder(req.headers["x-user-id"]);
 
     res.status(200).json({
       success: true,

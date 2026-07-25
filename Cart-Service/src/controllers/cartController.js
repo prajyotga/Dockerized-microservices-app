@@ -6,7 +6,7 @@ const addCart = async (req, res) => {
     const { menuItemId } = req.body;
 
     const cart = await cartService.addCart(
-      req.user.id,
+      req.headers["x-user-id"],
       menuItemId
     );
 
@@ -28,7 +28,7 @@ const addCart = async (req, res) => {
 // Get Cart
 const getCart = async (req, res) => {
   try {
-    const cart = await cartService.getCart(req.user.id);
+    const cart = await cartService.getCart(req.headers["x-user-id"]);
 
     res.status(200).json({
       success: true,
@@ -49,7 +49,7 @@ const getCart = async (req, res) => {
 const removeCart = async (req, res) => {
   try {
     const cart = await cartService.removeCart(
-      req.user.id,
+      req.headers["x-user-id"],
       req.params.menuItemId
     );
 
@@ -72,7 +72,7 @@ const removeCart = async (req, res) => {
 const increaseQuantity = async (req, res) => {
   try {
     const cart = await cartService.increaseQuantity(
-      req.user.id,
+     req.headers["x-user-id"],
       req.params.menuItemId
     );
 
@@ -95,7 +95,7 @@ const increaseQuantity = async (req, res) => {
 const decreaseQuantity = async (req, res) => {
   try {
     const cart = await cartService.decreaseQuantity(
-      req.user.id,
+     req.headers["x-user-id"],
       req.params.menuItemId
     );
 

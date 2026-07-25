@@ -8,7 +8,7 @@ const {
   decreaseQuantity,
   increaseQuantity
 } = require("../controllers/cartController.js");
-const authMiddleware = require("../middlewares/authMiddleware");
+const authMiddleware = require("../../../Backend/src/middlewares/authMiddleware.js");
 
 router.post("/add", authMiddleware, addCart);
 router.get("/", authMiddleware, getCart);
