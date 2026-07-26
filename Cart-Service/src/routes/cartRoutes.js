@@ -8,12 +8,12 @@ const {
   decreaseQuantity,
   increaseQuantity
 } = require("../controllers/cartController.js");
-const authMiddleware = require("../../../Backend/src/middlewares/authMiddleware.js");
 
-router.post("/add", authMiddleware, addCart);
-router.get("/", authMiddleware, getCart);
-router.delete("/:menuItemId", authMiddleware, removeCart);
-router.patch("/increase/:menuItemId", authMiddleware, increaseQuantity);
-router.patch("/decrease/:menuItemId", authMiddleware, decreaseQuantity);
+
+router.post("/add", addCart);
+router.get("/", getCart);
+router.delete("/:menuItemId", removeCart);
+router.patch("/increase/:menuItemId", increaseQuantity);
+router.patch("/decrease/:menuItemId", decreaseQuantity);
 
 module.exports = router;

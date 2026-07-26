@@ -1,17 +1,22 @@
-const Menu = require("../models/Menu");
+const menuRepository = require("../repositories/menuRepository");
 
 // Create Menu
 const createMenu = async (menuData) => {
-  const menu = await Menu.create(menuData);
-
-  return menu;
+  return await menuRepository.createMenu(menuData);
 };
 
 // Get Menu By Restaurant
 const getMenu = async (restaurantId) => {
-  const menu = await Menu.find({
-    restaurant_id: restaurantId,
-  });
+  return await menuRepository.getMenuByRestaurantId(restaurantId);
+};
+
+// Get Single Menu Item
+const getMenuItem = async (menuItemId) => {
+  const menu = await menuRepository.getMenuById(menuItemId);
+
+  if (!menu) {
+    throw new Error("Menu item not found");
+  }
 
   return menu;
 };
@@ -19,4 +24,5 @@ const getMenu = async (restaurantId) => {
 module.exports = {
   createMenu,
   getMenu,
+  getMenuItem,
 };

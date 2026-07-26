@@ -1,7 +1,6 @@
 const menuService = require("../services/menuService");
 
 // CREATE MENU
-
 const createMenu = async (req, res) => {
   try {
     const menu = await menuService.createMenu(req.body);
@@ -22,12 +21,9 @@ const createMenu = async (req, res) => {
 };
 
 // GET MENU OF A RESTAURANT
-
 const getMenu = async (req, res) => {
   try {
-    const menu = await menuService.getMenu(
-      req.params.restaurantId
-    );
+    const menu = await menuService.getMenu(req.params.restaurantId);
 
     res.status(200).json({
       success: true,
@@ -43,7 +39,27 @@ const getMenu = async (req, res) => {
   }
 };
 
+// GET SINGLE MENU ITEM
+const getMenuItem = async (req, res) => {
+  try {
+    const menu = await menuService.getMenuItem(req.params.menuItemId);
+
+    res.status(200).json({
+      success: true,
+      menu,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(404).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createMenu,
   getMenu,
+  getMenuItem,
 };

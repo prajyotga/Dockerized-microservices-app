@@ -1,9 +1,19 @@
-const express= require("express");
-const router=express.Router();
-const{createMenu,getMenu}=require("../controllers/menuController");
+const express = require("express");
+const router = express.Router();
 
+const {
+  createMenu,
+  getMenu,
+  getMenuItem,
+} = require("../controllers/menuController");
 
-router.post("/",createMenu);
-router.get("/:restaurantId",getMenu);
+// Create Menu
+router.post("/", createMenu);
 
-module.exports=router;
+// Get Single Menu Item
+router.get("/item/:menuItemId", getMenuItem);
+
+// Get Menu By Restaurant
+router.get("/:restaurantId", getMenu);
+
+module.exports = router;

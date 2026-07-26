@@ -1,18 +1,22 @@
-// const Menu = require("../models/Menu");
-const Cart = require("../models/Cart");
+const axios = require("axios");
+const cartRepository = require("../repositories/cartRepository");
 
 // Add Item to Cart
 const addCart = async (userId, menuItemId) => {
-  const menu = await Menu.findById(menuItemId);
 
-  if (!menu) {
+  // Verify Menu Item from Menu Service
+  try {
+    await axios.get(
+      `${process.env.MENU_SERVICE}/api/menu/item/${menuItemId}`
+    );
+  } catch (err) {
     throw new Error("Menu item not found");
   }
 
-  let cart = await Cart.findOne({ userId });
+  let cart = await cartRepository.findCartByUserId(userId);
 
   if (!cart) {
-    cart = await Cart.create({
+    return await cartRepository.createCart({
       userId,
       items: [
         {
@@ -21,8 +25,6 @@ const addCart = async (userId, menuItemId) => {
         },
       ],
     });
-
-    return cart;
   }
 
   const existingItem = cart.items.find(
@@ -30,7 +32,7 @@ const addCart = async (userId, menuItemId) => {
   );
 
   if (existingItem) {
-    existingItem.quantity += 1;
+    existingItem.quantity++;
   } else {
     cart.items.push({
       menuItem: menuItemId,
@@ -38,25 +40,27 @@ const addCart = async (userId, menuItemId) => {
     });
   }
 
-  await cart.save();
+  await cartRepository.saveCart(cart);
 
   return cart;
 };
 
 // Get Cart
 const getCart = async (userId) => {
-  const cart = await Cart.findOne({
-    userId,
-  }).populate("items.menuItem");
+
+  const cart = await cartRepository.findCartByUserId(userId);
+
+  if (!cart) {
+    throw new Error("Cart not found");
+  }
 
   return cart;
 };
 
 // Remove Item
 const removeCart = async (userId, menuItemId) => {
-  const cart = await Cart.findOne({
-    userId,
-  });
+
+  const cart = await cartRepository.findCartByUserId(userId);
 
   if (!cart) {
     throw new Error("Cart not found");
@@ -66,16 +70,15 @@ const removeCart = async (userId, menuItemId) => {
     (item) => item.menuItem.toString() !== menuItemId
   );
 
-  await cart.save();
+  await cartRepository.saveCart(cart);
 
   return cart;
 };
 
 // Increase Quantity
 const increaseQuantity = async (userId, menuItemId) => {
-  const cart = await Cart.findOne({
-    userId,
-  });
+
+  const cart = await cartRepository.findCartByUserId(userId);
 
   if (!cart) {
     throw new Error("Cart not found");
@@ -91,16 +94,15 @@ const increaseQuantity = async (userId, menuItemId) => {
 
   item.quantity++;
 
-  await cart.save();
+  await cartRepository.saveCart(cart);
 
   return cart;
 };
 
 // Decrease Quantity
 const decreaseQuantity = async (userId, menuItemId) => {
-  const cart = await Cart.findOne({
-    userId,
-  });
+
+  const cart = await cartRepository.findCartByUserId(userId);
 
   if (!cart) {
     throw new Error("Cart not found");
@@ -122,7 +124,7 @@ const decreaseQuantity = async (userId, menuItemId) => {
     );
   }
 
-  await cart.save();
+  await cartRepository.saveCart(cart);
 
   return cart;
 };

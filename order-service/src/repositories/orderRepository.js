@@ -5,7 +5,7 @@ const Cart = require("../models/Cart");
 const findCartByUserId = async (userId) => {
   return await Cart.findOne({
     userId,
-  }).populate("items.menuItem");
+  });
 };
 
 // Create Order
@@ -23,7 +23,7 @@ const getOrdersByUserId = async (userId) => {
   return await Order.find({
     userId,
   })
-    .populate("items.menuItem")
+    
     .sort({ createdAt: -1 });
 };
 
