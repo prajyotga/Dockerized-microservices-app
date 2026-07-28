@@ -2,10 +2,6 @@ const orderService = require("../services/orderService");
 
 // --------create an order for this logged in user
 
-
-
-
-
 const createOrder = async (req, res) => {
   try {
     const order = await orderService.createOrder(req.headers["x-user-id"]);
@@ -46,12 +42,9 @@ const getAllOrder = async (req, res) => {
   }
 };
 
-
 const getOrderById = async (req, res) => {
   try {
-    const order = await orderService.getOrderById(
-      req.params.id
-    );
+    const order = await orderService.getOrderById(req.params.id);
 
     res.status(200).json({
       success: true,
@@ -72,11 +65,7 @@ const updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;
 
-    const order =
-      await orderService.updateOrderStatus(
-        req.params.id,
-        status
-      );
+    const order = await orderService.updateOrderStatus(req.params.id, status);
 
     res.status(200).json({
       success: true,
@@ -93,5 +82,30 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
+//update Payment
+const updatePayment = async (req, res) => {
+  try {
+    const order = await orderService.updatePayment(req.params.id, req.body);
 
-module.exports = {createOrder,getAllOrder,getOrderById,updateOrderStatus};
+    res.status(200).json({
+      success: true,
+      message: "Payment updated successfully",
+      order,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = {
+  createOrder,
+  getAllOrder,
+  getOrderById,
+  updateOrderStatus,
+  updatePayment,
+};

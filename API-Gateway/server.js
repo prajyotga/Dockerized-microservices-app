@@ -125,18 +125,16 @@ app.use(
   "/api/payment",
   authMiddleware,
   createProxyMiddleware({
-    target: process.env.BACKEND_SERVICE,
+    target: process.env.PAYMENT_SERVICE,
     changeOrigin: true,
 
     on: {
       proxyReq: (proxyReq, req) => {
         proxyReq.setHeader("x-user-id", req.user.id);
-        proxyReq.setHeader("x-user-email", req.user.email || "");
       },
     },
   })
 );
-
 
 
 // ==========================

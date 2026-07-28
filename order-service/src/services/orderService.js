@@ -77,9 +77,30 @@ const updateOrderStatus = async (
   return order;
 };
 
+
+// update payment
+
+const updatePayment = async (
+  orderId,
+  paymentData
+) => {
+  const order =
+    await orderRepository.updatePayment(
+      orderId,
+      paymentData
+    );
+
+  if (!order) {
+    throw new Error("Order not found");
+  }
+
+  return order;
+};
+
 module.exports = {
   createOrder,
   getAllOrder,
   getOrderById,
   updateOrderStatus,
+  updatePayment
 };

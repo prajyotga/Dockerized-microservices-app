@@ -43,11 +43,23 @@ const updateOrderStatus = async (orderId, status) => {
   );
 };
 
+const updatePayment = async (
+  orderId,
+  paymentData
+) => {
+  return await Order.findByIdAndUpdate(
+    orderId,
+    paymentData,
+    { new: true }
+  );
+};
+
 module.exports = {
   findCartByUserId,
   createOrder,
   saveCart,
   getOrdersByUserId,
   getOrderById,
+  updatePayment,
   updateOrderStatus,
 };
