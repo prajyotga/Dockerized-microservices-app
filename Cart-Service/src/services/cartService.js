@@ -16,7 +16,7 @@ const addCart = async (userId, menuItemId) => {
   let cart = await cartRepository.findCartByUserId(userId);
 
   if (!cart) {
-    return await cartRepository.createCart({
+    await cartRepository.createCart({
       userId,
       items: [
         {
@@ -25,6 +25,8 @@ const addCart = async (userId, menuItemId) => {
         },
       ],
     });
+
+    return await getCart(userId);
   }
 
   const existingItem = cart.items.find(
@@ -42,7 +44,7 @@ const addCart = async (userId, menuItemId) => {
 
   await cartRepository.saveCart(cart);
 
-  return cart;
+  return await getCart(userId);
 };
 
 // Get Cart
@@ -54,7 +56,25 @@ const getCart = async (userId) => {
     throw new Error("Cart not found");
   }
 
-  return cart;
+  const items = await Promise.all(
+    cart.items.map(async (item) => {
+
+      const response = await axios.get(
+        `${process.env.MENU_SERVICE}/api/menu/item/${item.menuItem}`
+      );
+
+      return {
+        _id: item._id,
+        quantity: item.quantity,
+        menuItem: response.data.menu,
+      };
+    })
+  );
+
+  return {
+    ...cart.toObject(),
+    items,
+  };
 };
 
 // Remove Item
@@ -72,7 +92,7 @@ const removeCart = async (userId, menuItemId) => {
 
   await cartRepository.saveCart(cart);
 
-  return cart;
+  return await getCart(userId);
 };
 
 // Increase Quantity
@@ -96,7 +116,7 @@ const increaseQuantity = async (userId, menuItemId) => {
 
   await cartRepository.saveCart(cart);
 
-  return cart;
+  return await getCart(userId);
 };
 
 // Decrease Quantity
@@ -126,7 +146,7 @@ const decreaseQuantity = async (userId, menuItemId) => {
 
   await cartRepository.saveCart(cart);
 
-  return cart;
+  return await getCart(userId);
 };
 
 module.exports = {

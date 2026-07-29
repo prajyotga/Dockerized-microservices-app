@@ -1,13 +1,13 @@
 const orderRepository = require("../repositories/orderRepository");
-
+const axios=require("axios");
 // Create Order
 
 
 
 const createOrder = async (userId) => {
-  const cart = await orderRepository.findCartByUserId(
-    userId
-  );
+ const cart = await orderRepository.findCartByUserId(userId);
+
+  
 
   if (!cart || cart.items.length === 0) {
     throw new Error("Cart is empty");
@@ -20,43 +20,91 @@ const createOrder = async (userId) => {
   });
 
   const order = await orderRepository.createOrder({
-    userId,
-    items: cart.items.map((item) => ({
-      menuItem: item.menuItem._id,
-      quantity: item.quantity,
-    })),
-    totalAmount,
-  });
+  userId,
+  items: cart.items.map((item) => ({
+    menuItem: item.menuItem._id,
+    quantity: item.quantity,
+  })),
+  totalAmount,
+});
 
-  cart.items = [];
-
-  await orderRepository.saveCart(cart);
+await orderRepository.clearCart(userId);
 
   return order;
 };
 
-// Get All Orders
+
 const getAllOrder = async (userId) => {
-  const orders =
-    await orderRepository.getOrdersByUserId(userId);
+
+  const orders = await orderRepository.getOrdersByUserId(userId);
 
   if (!orders || orders.length === 0) {
     throw new Error("No orders placed yet");
   }
 
-  return orders;
+  const enrichedOrders = await Promise.all(
+
+    orders.map(async (order) => {
+
+      const items = await Promise.all(
+
+        order.items.map(async (item) => {
+
+          const response = await axios.get(
+            `${process.env.MENU_SERVICE}/api/menu/item/${item.menuItem}`
+          );
+
+          return {
+            ...item.toObject(),
+            menuItem: response.data.menu,
+          };
+
+        })
+
+      );
+
+      return {
+        ...order.toObject(),
+        items,
+      };
+
+    })
+
+  );
+
+  return enrichedOrders;
 };
 
 // Get Order By Id
 const getOrderById = async (orderId) => {
-  const order =
-    await orderRepository.getOrderById(orderId);
+
+  const order = await orderRepository.getOrderById(orderId);
 
   if (!order) {
     throw new Error("Order not found");
   }
 
-  return order;
+  const items = await Promise.all(
+
+    order.items.map(async (item) => {
+
+      const response = await axios.get(
+        `${process.env.MENU_SERVICE}/api/menu/item/${item.menuItem}`
+      );
+
+      return {
+        ...item.toObject(),
+        menuItem: response.data.menu,
+      };
+
+    })
+
+  );
+
+  return {
+    ...order.toObject(),
+    items,
+  };
 };
 
 // Update Status
@@ -80,21 +128,11 @@ const updateOrderStatus = async (
 
 // update payment
 
-const updatePayment = async (
-  orderId,
-  paymentData
-) => {
-  const order =
-    await orderRepository.updatePayment(
-      orderId,
-      paymentData
-    );
-
-  if (!order) {
-    throw new Error("Order not found");
-  }
-
-  return order;
+const updatePayment = async (orderId, paymentData) => {
+  return await orderRepository.updatePayment(
+    orderId,
+    paymentData
+  );
 };
 
 module.exports = {

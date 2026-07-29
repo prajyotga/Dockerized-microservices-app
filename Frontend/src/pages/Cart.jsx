@@ -15,6 +15,8 @@ const Cart = () => {
     try {
       const { data } = await API.get("/cart");
 
+   
+
       console.log(data);
 
       setCart(data.cart);
@@ -25,6 +27,8 @@ const Cart = () => {
       setLoading(false);
     }
   };
+
+  
 
   const removeItem = async (menuItemId) => {
     try {
@@ -69,8 +73,9 @@ const decreaseQuantity = async (menuItemId) => {
 
       navigate("/orders");
     } catch (error) {
-      console.log(error);
-      total.error("Failed to place order");
+     console.log(error.response?.data);
+
+  toast.error(error.response?.data?.message || "Failed to place order");
     }
   };
 

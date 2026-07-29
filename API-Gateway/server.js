@@ -125,7 +125,7 @@ app.use(
   "/api/payment",
   authMiddleware,
   createProxyMiddleware({
-    target: process.env.PAYMENT_SERVICE,
+    target: `${process.env.PAYMENT_SERVICE}/api/payment`,
     changeOrigin: true,
 
     on: {

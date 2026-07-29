@@ -9,7 +9,7 @@ const cookieParser = require("cookie-parser");
 // const menuRoutes = require("./routes/menuRoutes");
 const cartRoutes = require("../../Cart-Service/src/routes/cartRoutes");
 // const orderRoutes = require("./routes/orderRoutes");
-const paymentRoutes = require("./routes/paymentRoutes");
+// const paymentRoutes = require("./routes/paymentRoutes");
 
 app.use(
   cors({
@@ -30,6 +30,6 @@ app.use(cookieParser());
 // app.use("/api/menu", menuRoutes);
 app.use("/api/cart", cartRoutes);
 // app.use("/api/orders", orderRoutes);
-app.use("/api/payment", paymentRoutes);
+// app.use("/api/payment", paymentRoutes);
 
 module.exports = app;

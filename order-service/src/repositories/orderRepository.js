@@ -1,22 +1,42 @@
 const Order = require("../models/Order");
-const Cart = require("../models/Cart");
 
 // Find cart by user id
+const axios = require("axios");
+
+
+// Find Cart by User Id
 const findCartByUserId = async (userId) => {
-  return await Cart.findOne({
-    userId,
-  });
+
+  const response = await axios.get(
+    `${process.env.CART_SERVICE}/api/cart`,
+    {
+      headers: {
+        "x-user-id": userId,
+      },
+    }
+  );
+
+  return response.data.cart;
 };
 
+
+const clearCart = async (userId) => {
+  await axios.delete(
+    `${process.env.CART_SERVICE}/api/cart/clear`,
+    {
+      headers: {
+        "x-user-id": userId,
+      },
+    }
+  );
+};
 // Create Order
 const createOrder = async (orderData) => {
   return await Order.create(orderData);
 };
 
-// Save Cart
-const saveCart = async (cart) => {
-  return await cart.save();
-};
+
+
 
 // Get all orders
 const getOrdersByUserId = async (userId) => {
@@ -29,9 +49,7 @@ const getOrdersByUserId = async (userId) => {
 
 // Get order by id
 const getOrderById = async (orderId) => {
-  return await Order.findById(orderId).populate(
-    "items.menuItem"
-  );
+  return await Order.findById(orderId);
 };
 
 // Update status
@@ -57,9 +75,10 @@ const updatePayment = async (
 module.exports = {
   findCartByUserId,
   createOrder,
-  saveCart,
+ 
   getOrdersByUserId,
   getOrderById,
   updatePayment,
   updateOrderStatus,
+  clearCart
 };

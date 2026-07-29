@@ -51,6 +51,7 @@ const Orders = () => {
             const { data } = await API.post(
               "/payment/verify",
               {
+                orderId,
                 razorpay_order_id:
                   response.razorpay_order_id,
 
